@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:myfirstproject/providertest/CouterModel.dart';
+import 'package:myfirstproject/providertest/secondPage.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,16 +27,22 @@ class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _counter=Provider.of<CounterModel>(context);
-    final textSize=Provider.of<int>(context);
+    final textSize=Provider.of<int>(context).toDouble();
     return Scaffold(
       appBar: AppBar(
-        title: ,
+        title: Text(
+            "FirstPage"
+        ),
       ),
       body: SafeArea(
         child: Container(
           alignment: Alignment.center,
-          child: Center(child: Text("Hello world")),
+          child: Center(
+              child: Text('Value:${_counter.count}',style: TextStyle(fontSize: textSize))),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SecondScreen())),
       ),
     );
   }
