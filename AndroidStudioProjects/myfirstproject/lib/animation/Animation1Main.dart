@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: FirstScreen(),
-      );
+      debugShowCheckedModeBanner: false,
+      home: FirstScreen(),
+    );
   }
 }
 
@@ -42,18 +42,30 @@ class _FirstScreenState extends State<FirstScreen> {
       ),
       body: SafeArea(
         child: Center(
-          child:AnimatedOpacity(
-            duration: Duration(seconds: 2),
-            curve: Curves.linear,
-            opacity: 0.0,
-            child: Container(
-              width: 300,
-              height: 300,
-              color: Colors.blue,
-
+          child: Container(
+            width: 300,
+            height: 120,
+            color: Colors.blue,
+            child: TweenAnimationBuilder(
+              duration: Duration(seconds: 1),
+              tween: Tween(begin: 7.0,end: 10.0),
+              builder: (context,value,child){
+                final whole=value~/1;
+                final decimal=value-whole;
+                return Stack(
+                  children: [
+                    Positioned(
+                        top: -100*decimal,//0->-100
+                        child: Text("${whole}",style: TextStyle(fontSize: 100),)),
+                    Positioned(
+                        top: 100-decimal*100,//100->0
+                        child: Text("${whole+1}",style: TextStyle(fontSize: 100),)),
+                  ],
+                );
+              },
             ),
-          )
         ),
+      ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
