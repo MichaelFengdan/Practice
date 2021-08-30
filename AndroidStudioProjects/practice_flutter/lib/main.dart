@@ -1,68 +1,68 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:practice_flutter/Person.dart';
+import 'package:practice_flutter/http/core/hi_net.dart';
+import 'package:practice_flutter/http/request/test_request.dart';
+import 'package:practice_flutter/ioslate_page.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  // build
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+        debugShowCheckedModeBanner: false,
+        home: Center(
+            child: PracticeMainPage()),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+class PracticeMainPage extends StatefulWidget {
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _PracticeMainPageState createState() => _PracticeMainPageState();
+
+  _loadIsolateDate() async{
+    await Isolate.spawn(_backgroundWork, ReceivePort().sendPort);
+  }
+
+  _backgroundWork(SendPort sendPort){
+    sendPort.send('BackgroundWork ->');
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class _PracticeMainPageState extends State<PracticeMainPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      appBar: AppBar(title: Text('学习',style: TextStyle(fontSize: 14),)),
+      body: GestureDetector(
+        onTap: (){
+          print('就是他妈的点击了');
+          _testRequest();
+        },
+        child: Center(
+          child: Center(child: Container(
+            width: 100,
+            height: 100,
+            color: Colors.red,
+          )),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  void _testRequest() async{
+    TestRequest request=TestRequest();
+    request.add('aa', 'ddd').add('bb', '333');
+    var result=await HiNet.getInstance().fire(request);
+    print(result);
   }
 }
