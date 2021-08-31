@@ -2,9 +2,12 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:practice_flutter/Person.dart';
-import 'package:practice_flutter/http/core/hi_net.dart';
 import 'package:practice_flutter/http/request/test_request.dart';
 import 'package:practice_flutter/ioslate_page.dart';
+
+import 'http/core/hi_error.dart';
+import 'http/core/hi_net.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -62,6 +65,16 @@ class _PracticeMainPageState extends State<PracticeMainPage> {
   void _testRequest() async{
     TestRequest request=TestRequest();
     request.add('aa', 'ddd').add('bb', '333');
+    try{
+      var result=await HiNet.getInstance().fire(request);
+      print(result);
+    } on NeedAuthError catch(e){
+      print(e);
+    } on NeedLoginError catch(e){
+      print(e);
+    } on HiNetError catch(e){
+      print(e);
+    }
     var result=await HiNet.getInstance().fire(request);
     print(result);
   }
