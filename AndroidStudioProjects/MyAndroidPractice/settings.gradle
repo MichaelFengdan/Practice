@@ -1,0 +1,4 @@
+include ':groovyPlugin'
+include ':example02'
+include ':app'
+rootProject.name = "MyAndroidPractice"
